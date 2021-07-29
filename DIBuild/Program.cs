@@ -7,12 +7,12 @@ namespace DIBuild
     {
         internal static void Main(string[] args)
         {
-            var container = new ServiceContainer();
+            var container = new DependencyContainer();
             container.AddSingleton<ServiceTest>();
             container.AddSingleton(typeof(ServiceTestConstructor));
             container.AddTransient<ServiceTestTrans>();
 
-            var resolver = new ServiceResolver(container);
+            var resolver = new DependencyResolver(container);
 
             var serviceTestInstance = resolver.GetService<ServiceTest>();
             var serviceTestInstanceConst = resolver.GetService<ServiceTestConstructor>();
