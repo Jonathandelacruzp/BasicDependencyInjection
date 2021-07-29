@@ -2,11 +2,30 @@
 
 namespace DIBuild
 {
-    class Program
+    internal static class Program
     {
-        static void Main(string[] args)
+        internal static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            var container = new ServiceContainer();
+            container.Add<ServiceTest>();
+            
+            var serviceTestInstance = (ServiceTest) Activator.CreateInstance(container.GetDependencyType(typeof(ServiceTest)));
+            serviceTestInstance!.Print();
+        }
+    }
+
+    public class ServiceTest
+    {
+        public Guid Guid { get; set; }
+
+        public ServiceTest()
+        {
+            Guid = Guid.NewGuid();
+        }
+
+        public void Print()
+        {
+            Console.WriteLine(Guid);
         }
     }
 }
