@@ -18,13 +18,14 @@ namespace DIBuild
 
         public T GetService<T>()
         {
-            var type = _container.GetDependencyType(typeof(T));
-            return (T) GetService(type);
+            var (type, serviceLifeTime) = _container.GetServiceType(typeof(T));
+            return (T) GetService(type, serviceLifeTime);
         }
 
-        private object GetService(Type type)
+        private object GetService(Type type, ServiceLifeTime serviceLifeTime)
         {
-            if (_objectDictionary.TryGetValue(type.Name, out var instance))
+            if (_objectDictionary.TryGetValue(type.Name, out var instance)
+                && serviceLifeTime == ServiceLifeTime.Singleton)
                 return instance;
 
             try
@@ -32,14 +33,13 @@ namespace DIBuild
                 var constructor = type.GetConstructors().Single();
                 var constructorParameters = constructor.GetParameters();
                 if (constructorParameters.Length == 0)
-                {
-                    instance = Activator.CreateInstance(type);
-                    return instance;
-                }
+                    return instance = Activator.CreateInstance(type);
 
-                var objectParameters = constructorParameters.Select(parameter => GetService(parameter.ParameterType)).ToArray();
-                instance = Activator.CreateInstance(type, objectParameters);
-                return instance;
+                var objectParameters = constructorParameters
+                    .Select(parameter => GetService(parameter.ParameterType, _container.GetServiceLifetime(parameter.ParameterType)))
+                    .ToArray();
+
+                return instance = Activator.CreateInstance(type, objectParameters);
             }
             catch (Exception ex)
             {
@@ -47,7 +47,7 @@ namespace DIBuild
             }
             finally
             {
-                if (instance != null)
+                if (serviceLifeTime == ServiceLifeTime.Singleton)
                     _objectDictionary.Add(type.Name, instance);
             }
         }
