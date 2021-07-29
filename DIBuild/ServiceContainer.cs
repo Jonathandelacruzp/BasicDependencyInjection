@@ -13,9 +13,14 @@ namespace DIBuild
             _dependencies = new List<Type>();
         }
 
-        public void Add<T>()
+        public void AddService<T>()
         {
             _dependencies.Add(typeof(T));
+        }
+        
+        public void AddService(Type type)
+        {
+            _dependencies.Add(type);
         }
 
         public Type GetDependencyType(Type type)
