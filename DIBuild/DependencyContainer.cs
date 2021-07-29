@@ -25,17 +25,24 @@ namespace DIBuild
 
         public void AddTransient<T>()
         {
-            _dependencies.Add(Dependency.Factory.Create(typeof(T), ServiceLifeTime.Transient));
+            _dependencies.Add(Dependency.Factory.Create(typeof(T)));
         }
 
-        public void AddTransient(Type type)
-        {
-            _dependencies.Add(Dependency.Factory.Create(type, ServiceLifeTime.Transient));
-        }
-
-        public Dependency GetServiceType(Type type)
+        public Dependency GetDependencyByType(Type type)
         {
             return _dependencies.First(x => x.Type.Name == type.Name);
+        }
+
+        public ICollection<Dependency> GetScopeDependencies()
+        {
+            return _dependencies.Where(x => x.ServiceLifeTime == ServiceLifeTime.Scoped)
+                .Select(Dependency.Factory.Create)
+                .ToList();
+        }
+
+        public void AddScoped<T>()
+        {
+            _dependencies.Add(Dependency.Factory.Create(typeof(T), ServiceLifeTime.Scoped));
         }
     }
 }

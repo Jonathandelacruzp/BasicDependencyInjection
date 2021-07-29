@@ -5,20 +5,20 @@ namespace DIBuild
 {
     public class DependencyResolver
     {
-        private readonly DependencyContainer _container;
+        protected readonly DependencyContainer DependencyContainer;
 
         public DependencyResolver(DependencyContainer container)
         {
-            _container = container;
+            DependencyContainer = container;
         }
 
-        public T GetService<T>()
+        public virtual T GetService<T>()
         {
-            var dependency = _container.GetServiceType(typeof(T));
+            var dependency = DependencyContainer.GetDependencyByType(typeof(T));
             return (T) GetService(dependency);
         }
 
-        private object GetService(Dependency dependency)
+        protected virtual object GetService(Dependency dependency)
         {
             if (dependency.HasInstance)
                 return dependency.Instance;
@@ -35,7 +35,7 @@ namespace DIBuild
                 var objectParameters = constructorParameters
                     .Select(parameter =>
                     {
-                        var dependencyParam = _container.GetServiceType(parameter.ParameterType);
+                        var dependencyParam = DependencyContainer.GetDependencyByType(parameter.ParameterType);
                         return GetService(dependencyParam);
                     })
                     .ToArray();
