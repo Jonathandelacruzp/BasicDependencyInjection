@@ -5,7 +5,7 @@ namespace DIBuild.Models
     public class TestObject
     {
         protected readonly TestObjectTransient TestObjectTransient;
-        public Guid Guid { get; }
+        private Guid Guid { get; }
 
         public TestObject(TestObjectTransient testObjectTransient)
         {
@@ -15,11 +15,14 @@ namespace DIBuild.Models
 
         public virtual void Print()
         {
-            Console.WriteLine(GetType().Name + "Begin");
-            Console.WriteLine(Guid);
-            Console.WriteLine(TestObjectTransient.Guid);
-            Console.WriteLine(GetType().Name + "End");
+            Console.WriteLine(this);
+            Console.WriteLine(TestObjectTransient);
             Console.WriteLine("----------------");
+        }
+
+        public override string ToString()
+        {
+            return $"{GetType().Name} {Guid}";
         }
     }
 }

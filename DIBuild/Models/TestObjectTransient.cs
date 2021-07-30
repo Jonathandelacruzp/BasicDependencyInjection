@@ -4,7 +4,7 @@ namespace DIBuild.Models
 {
     public class TestObjectTransient
     {
-        public Guid Guid { get; }
+        private Guid Guid { get; }
 
         public TestObjectTransient()
         {
@@ -13,10 +13,13 @@ namespace DIBuild.Models
 
         public void Print()
         {
-            Console.WriteLine(GetType().Name + "Begin");
-            Console.WriteLine(Guid);
-            Console.WriteLine(GetType().Name + "End");
+            Console.WriteLine(this);
             Console.WriteLine("----------------");
+        }
+
+        public override string ToString()
+        {
+            return $"{GetType().Name} {Guid}";
         }
     }
 }
