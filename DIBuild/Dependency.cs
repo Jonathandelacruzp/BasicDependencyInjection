@@ -4,27 +4,33 @@ namespace DIBuild
 {
     public class Dependency : IDisposable
     {
+        public Type ImplementorType { get; }
         public Type Type { get; }
         public ServiceLifeTime ServiceLifeTime { get; }
         public object Instance { get; private set; }
         public bool HasInstance { get; private set; }
+        public bool IsInterfaceType { get; }
 
-        private Dependency(Type type, ServiceLifeTime serviceLifeTime)
+        private Dependency(Type type, Type implementorType, ServiceLifeTime serviceLifeTime)
         {
+            IsInterfaceType = type.IsInterface;
+            if (IsInterfaceType)
+                ImplementorType = implementorType ?? throw new Exception("Dependency implementor type with Interface base Type can not be null");
+
             Type = type;
             ServiceLifeTime = serviceLifeTime;
         }
 
         public static class Factory
         {
-            public static Dependency Create(Type type, ServiceLifeTime serviceLifeTime = ServiceLifeTime.Transient)
+            public static Dependency Create(Type type, Type implementorType = null, ServiceLifeTime serviceLifeTime = ServiceLifeTime.Transient)
             {
-                return new(type, serviceLifeTime);
+                return new(type, implementorType, serviceLifeTime);
             }
 
             public static Dependency Create(Dependency dependency)
             {
-                return new(dependency.Type, dependency.ServiceLifeTime);
+                return new(dependency.Type, dependency.ImplementorType, dependency.ServiceLifeTime);
             }
         }
 

@@ -1,15 +1,16 @@
 ﻿using System;
+using DIBuild.interfaces;
 
 namespace DIBuild.Models
 {
     public class TestObjectTransient
     {
-        private readonly TestObject _testObject;
+        private readonly ITestObject _testObject;
         private readonly TestObjectSingleton _testObjectSingleton;
         private readonly TestObjectScope _testObjectScope;
         private string Guid { get; }
 
-        public TestObjectTransient(TestObject testObject, TestObjectSingleton testObjectSingleton, TestObjectScope  testObjectScope)
+        public TestObjectTransient(ITestObject testObject, TestObjectSingleton testObjectSingleton, TestObjectScope  testObjectScope)
         {
             _testObject = testObject;
             _testObjectSingleton = testObjectSingleton;

@@ -1,8 +1,9 @@
 ﻿using System;
+using DIBuild.interfaces;
 
 namespace DIBuild.Models
 {
-    public class TestObject
+    public class TestObject : ITestObject
     {
         private string Guid { get; }
 

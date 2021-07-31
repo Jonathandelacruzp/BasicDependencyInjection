@@ -1,4 +1,5 @@
 ﻿using System;
+using DIBuild.interfaces;
 using DIBuild.Models;
 
 namespace DIBuild
@@ -8,7 +9,7 @@ namespace DIBuild
         internal static void Main(string[] args)
         {
             var container = new DependencyContainer();
-            container.AddSingleton<TestObject>();
+            container.AddSingleton<ITestObject, TestObject>();
             container.AddSingleton(typeof(TestObjectSingleton));
             container.AddTransient<TestObjectTransient>();
             container.AddScoped<TestObjectScope>();
@@ -17,7 +18,7 @@ namespace DIBuild
             {
                 Console.WriteLine($"-------------------------------------- {i} --------------------------------------");
                 using var resolver = new ScopeDependencyResolver(container);
-                var testObject = resolver.GetService<TestObject>();
+                var testObject = resolver.GetService<ITestObject>();
                 var testObjectSingleton = resolver.GetService<TestObjectSingleton>();
                 var testObjectTransient = resolver.GetService<TestObjectTransient>();
                 var testObjectScope = resolver.GetService<TestObjectScope>();

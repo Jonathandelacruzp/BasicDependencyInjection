@@ -1,13 +1,14 @@
 ﻿using System;
+using DIBuild.interfaces;
 
 namespace DIBuild.Models
 {
     public class TestObjectSingleton
     {
-        private readonly TestObject _testObject;
+        private readonly ITestObject _testObject;
         private string Guid { get; }
 
-        public TestObjectSingleton(TestObject testObject)
+        public TestObjectSingleton(ITestObject testObject)
         {
             _testObject = testObject;
             Guid = System.Guid.NewGuid().ToString().Split('-')[0];
