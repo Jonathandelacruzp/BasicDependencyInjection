@@ -64,8 +64,8 @@ namespace DIBuild
 
     public enum ServiceLifeTime
     {
-        Singleton,
-        Scoped,
-        Transient
+        Singleton = 0,
+        Scoped = 1,
+        Transient = 2
     }
 }

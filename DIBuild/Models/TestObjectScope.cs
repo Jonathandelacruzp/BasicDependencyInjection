@@ -4,18 +4,25 @@ namespace DIBuild.Models
 {
     public class TestObjectScope : TestObject
     {
-        private Guid Guid { get; }
+        private readonly TestObjectSingleton _testObjectSingleton;
+        private string Guid { get; }
 
-        public TestObjectScope(TestObjectTransient testObjectTransient) : base(testObjectTransient)
+        public TestObjectScope(TestObjectSingleton testObjectSingleton)
         {
-            Guid = Guid.NewGuid();
+            _testObjectSingleton = testObjectSingleton;
+            Guid = System.Guid.NewGuid().ToString().Split('-')[0];
         }
 
         public override void Print()
         {
             Console.WriteLine(this);
-            Console.WriteLine(TestObjectTransient);
+            Console.WriteLine(_testObjectSingleton);
             Console.WriteLine("----------------");
+        }
+
+        public override string ToString()
+        {
+            return $"{GetType().Name} {Guid}";
         }
     }
 }

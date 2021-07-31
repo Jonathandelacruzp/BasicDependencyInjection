@@ -13,7 +13,7 @@ namespace DIBuild
             ScopeDependencies = dependencyContainer.GetScopeDependencies();
         }
 
-        public virtual T GetService<T>()
+        public override T GetService<T>()
         {
             return (T) GetService(GetDependency(typeof(T)));
         }
@@ -42,6 +42,9 @@ namespace DIBuild
                     .Select(parameter =>
                     {
                         var dependencyParam = GetDependency(parameter.ParameterType);
+                        if (dependencyParam.ServiceLifeTime > dependency.ServiceLifeTime)
+                            throw new Exception($"Dependency {dependency.Type.Name} should contain {dependency.ServiceLifeTime.ToString()} parameters on constructor");
+
                         return GetService(dependencyParam);
                     })
                     .ToArray();

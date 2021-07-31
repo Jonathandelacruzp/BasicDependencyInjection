@@ -26,9 +26,12 @@ namespace DIBuild
                 testObjectSingleton!.Print();
                 testObjectScope!.Print();
                 testObjectTransient!.Print();
-            
+
                 var testInstanceScope2 = resolver.GetService<TestObjectScope>();
                 testInstanceScope2!.Print();
+
+                var testObjectTransient2 = resolver.GetService<TestObjectTransient>();
+                testObjectTransient2.Print();
             }
         }
     }

@@ -4,19 +4,16 @@ namespace DIBuild.Models
 {
     public class TestObject
     {
-        protected readonly TestObjectTransient TestObjectTransient;
-        private Guid Guid { get; }
+        private string Guid { get; }
 
-        public TestObject(TestObjectTransient testObjectTransient)
+        public TestObject()
         {
-            TestObjectTransient = testObjectTransient;
-            Guid = Guid.NewGuid();
+            Guid = System.Guid.NewGuid().ToString().Split('-')[0];
         }
 
         public virtual void Print()
         {
             Console.WriteLine(this);
-            Console.WriteLine(TestObjectTransient);
             Console.WriteLine("----------------");
         }
 
