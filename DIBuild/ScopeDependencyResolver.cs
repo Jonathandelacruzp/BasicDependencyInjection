@@ -29,6 +29,12 @@ namespace DIBuild
             if (dependency.HasInstance)
                 return dependency.Instance;
 
+            if (dependency.IsFuncInstance)
+            {
+                dependency.SetFuncInstance();
+                return dependency.Instance;
+            }
+
             var implementorType = dependency.IsInterfaceType ? dependency.ImplementorType : dependency.Type;
             object instance = null;
 

@@ -23,6 +23,11 @@ namespace DIBuild
             _dependencies.Add(Dependency.Factory.Create(typeof(T), null, ServiceLifeTime.Singleton));
         }
 
+        public void AddSingleton<T>(Func<T> func)
+        {
+            _dependencies.Add(Dependency.Factory.Create(typeof(T), ServiceLifeTime.Singleton, () => func()));
+        }
+
         public void AddSingleton(Type type)
         {
             _dependencies.Add(Dependency.Factory.Create(type, null, ServiceLifeTime.Singleton));
@@ -53,6 +58,11 @@ namespace DIBuild
         public void AddScoped<TInterface, TImplementor>() where TImplementor : TInterface
         {
             _dependencies.Add(Dependency.Factory.Create(typeof(TInterface), typeof(TImplementor), ServiceLifeTime.Scoped));
+        }
+
+        public void AddScoped<T>(Func<T> func)
+        {
+            _dependencies.Add(Dependency.Factory.Create(typeof(T), ServiceLifeTime.Scoped, () => func()));
         }
     }
 }

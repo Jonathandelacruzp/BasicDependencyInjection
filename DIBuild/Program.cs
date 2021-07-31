@@ -9,7 +9,7 @@ namespace DIBuild
         internal static void Main(string[] args)
         {
             var container = new DependencyContainer();
-            container.AddSingleton<ITestObject, TestObject>();
+            container.AddSingleton<ITestObject>(() => new TestObject());
             container.AddSingleton(typeof(TestObjectSingleton));
             container.AddTransient<TestObjectTransient>();
             container.AddScoped<TestObjectScope>();
