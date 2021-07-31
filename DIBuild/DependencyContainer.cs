@@ -13,14 +13,19 @@ namespace DIBuild
             _dependencies = new List<Dependency>();
         }
 
-        public void AddSingleton<T>()
+        public void AddSingleton<TInterface, TImplementor>() where TImplementor : TInterface
         {
-            _dependencies.Add(Dependency.Factory.Create(typeof(T), ServiceLifeTime.Singleton));
+            _dependencies.Add(Dependency.Factory.Create(typeof(TInterface), typeof(TImplementor), ServiceLifeTime.Singleton));
+        }
+
+        public void AddSingleton<T>() where T : class
+        {
+            _dependencies.Add(Dependency.Factory.Create(typeof(T), null, ServiceLifeTime.Singleton));
         }
 
         public void AddSingleton(Type type)
         {
-            _dependencies.Add(Dependency.Factory.Create(type, ServiceLifeTime.Singleton));
+            _dependencies.Add(Dependency.Factory.Create(type, null, ServiceLifeTime.Singleton));
         }
 
         public void AddTransient<T>()
@@ -40,9 +45,14 @@ namespace DIBuild
                 .ToList();
         }
 
-        public void AddScoped<T>()
+        public void AddScoped<T>() where T : class
         {
-            _dependencies.Add(Dependency.Factory.Create(typeof(T), ServiceLifeTime.Scoped));
+            _dependencies.Add(Dependency.Factory.Create(typeof(T), null, ServiceLifeTime.Scoped));
+        }
+
+        public void AddScoped<TInterface, TImplementor>() where TImplementor : TInterface
+        {
+            _dependencies.Add(Dependency.Factory.Create(typeof(TInterface), typeof(TImplementor), ServiceLifeTime.Scoped));
         }
     }
 }

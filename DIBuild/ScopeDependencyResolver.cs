@@ -29,31 +29,32 @@ namespace DIBuild
             if (dependency.HasInstance)
                 return dependency.Instance;
 
+            var implementorType = dependency.IsInterfaceType ? dependency.ImplementorType : dependency.Type;
             object instance = null;
 
             try
             {
-                var constructor = dependency.Type.GetConstructors().Single();
+                var constructor = implementorType.GetConstructors().Single();
                 var constructorParameters = constructor.GetParameters();
                 if (constructorParameters.Length == 0)
-                    return instance = Activator.CreateInstance(dependency.Type);
+                    return instance = Activator.CreateInstance(implementorType);
 
                 var objectParameters = constructorParameters
                     .Select(parameter =>
                     {
                         var dependencyParam = GetDependency(parameter.ParameterType);
                         if (dependencyParam.ServiceLifeTime > dependency.ServiceLifeTime)
-                            throw new Exception($"Dependency {dependency.Type.Name} should contain {dependency.ServiceLifeTime.ToString()} parameters on constructor");
+                            throw new Exception($"Dependency {implementorType.Name} should contain {dependency.ServiceLifeTime.ToString()} parameters on constructor");
 
                         return GetService(dependencyParam);
                     })
                     .ToArray();
 
-                return instance = Activator.CreateInstance(dependency.Type, objectParameters);
+                return instance = Activator.CreateInstance(implementorType, objectParameters);
             }
             catch (Exception ex)
             {
-                throw new Exception($"Could not create and instance for type '{dependency.Type.Name}'", ex);
+                throw new Exception($"Could not create and instance for type '{implementorType.Name}'", ex);
             }
             finally
             {
