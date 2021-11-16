@@ -1,56 +1,52 @@
-﻿using System;
-using System.Linq;
+﻿namespace DIBuild;
 
-namespace DIBuild
+public class DependencyResolver
 {
-    public class DependencyResolver
+    protected readonly DependencyContainer DependencyContainer;
+
+    public DependencyResolver(DependencyContainer container)
     {
-        protected readonly DependencyContainer DependencyContainer;
+        DependencyContainer = container;
+    }
 
-        public DependencyResolver(DependencyContainer container)
+    public virtual T GetService<T>()
+    {
+        var dependency = DependencyContainer.GetDependencyByType(typeof(T));
+        return (T)GetService(dependency);
+    }
+
+    protected virtual object GetService(Dependency dependency)
+    {
+        if (dependency.HasInstance)
+            return dependency.Instance;
+
+        object instance = null;
+
+        try
         {
-            DependencyContainer = container;
+            var constructor = dependency.Type.GetConstructors().Single();
+            var constructorParameters = constructor.GetParameters();
+            if (constructorParameters.Length == 0)
+                return instance = Activator.CreateInstance(dependency.Type);
+
+            var objectParameters = constructorParameters
+                .Select(parameter =>
+                {
+                    var dependencyParam = DependencyContainer.GetDependencyByType(parameter.ParameterType);
+                    return GetService(dependencyParam);
+                })
+                .ToArray();
+
+            return instance = Activator.CreateInstance(dependency.Type, objectParameters);
         }
-
-        public virtual T GetService<T>()
+        catch (Exception ex)
         {
-            var dependency = DependencyContainer.GetDependencyByType(typeof(T));
-            return (T) GetService(dependency);
+            throw new Exception($"Could not create and instance for type '{dependency.Type.Name}'", ex);
         }
-
-        protected virtual object GetService(Dependency dependency)
+        finally
         {
-            if (dependency.HasInstance)
-                return dependency.Instance;
-
-            object instance = null;
-
-            try
-            {
-                var constructor = dependency.Type.GetConstructors().Single();
-                var constructorParameters = constructor.GetParameters();
-                if (constructorParameters.Length == 0)
-                    return instance = Activator.CreateInstance(dependency.Type);
-
-                var objectParameters = constructorParameters
-                    .Select(parameter =>
-                    {
-                        var dependencyParam = DependencyContainer.GetDependencyByType(parameter.ParameterType);
-                        return GetService(dependencyParam);
-                    })
-                    .ToArray();
-
-                return instance = Activator.CreateInstance(dependency.Type, objectParameters);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Could not create and instance for type '{dependency.Type.Name}'", ex);
-            }
-            finally
-            {
-                if (dependency.ServiceLifeTime == ServiceLifeTime.Singleton && instance != null)
-                    dependency.SetInstance(instance);
-            }
+            if (dependency.ServiceLifeTime == ServiceLifeTime.Singleton && instance != null)
+                dependency.SetInstance(instance);
         }
     }
 }

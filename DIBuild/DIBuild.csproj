@@ -2,7 +2,19 @@
 
     <PropertyGroup>
         <OutputType>Exe</OutputType>
-        <TargetFramework>net5.0</TargetFramework>
+        <TargetFramework>net6.0</TargetFramework>
     </PropertyGroup>
+
+    <ItemGroup>
+      <Compile Update="DependencyContainer.Functions.cs">
+        <DependentUpon>DependencyContainer.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Dependency.Factory.cs">
+        <DependentUpon>Dependency.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Dependency.Functions.cs">
+        <DependentUpon>Dependency.cs</DependentUpon>
+      </Compile>
+    </ItemGroup>
 
 </Project>

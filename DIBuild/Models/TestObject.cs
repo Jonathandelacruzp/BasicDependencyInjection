@@ -1,26 +1,22 @@
-﻿using System;
-using DIBuild.interfaces;
+﻿namespace DIBuild.Models;
 
-namespace DIBuild.Models
+public class TestObject : ITestObject
 {
-    public class TestObject : ITestObject
+    private string Guid { get; }
+
+    public TestObject()
     {
-        private string Guid { get; }
+        Guid = System.Guid.NewGuid().ToString().Split('-')[0];
+    }
 
-        public TestObject()
-        {
-            Guid = System.Guid.NewGuid().ToString().Split('-')[0];
-        }
+    public virtual void Print()
+    {
+        Console.WriteLine(this);
+        Console.WriteLine("----------------");
+    }
 
-        public virtual void Print()
-        {
-            Console.WriteLine(this);
-            Console.WriteLine("----------------");
-        }
-
-        public override string ToString()
-        {
-            return $"{GetType().Name} {Guid}";
-        }
+    public override string ToString()
+    {
+        return $"{GetType().Name} {Guid}";
     }
 }
