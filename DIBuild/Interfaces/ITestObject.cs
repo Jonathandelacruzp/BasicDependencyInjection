@@ -1,7 +1,6 @@
-﻿namespace DIBuild.interfaces
+﻿namespace DIBuild.Interfaces;
+
+public interface ITestObject
 {
-    public interface ITestObject
-    {
-        void Print();
-    }
+    void Print();
 }

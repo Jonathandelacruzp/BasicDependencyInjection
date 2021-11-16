@@ -1,29 +1,25 @@
-﻿using System;
-using DIBuild.interfaces;
+﻿namespace DIBuild.Models;
 
-namespace DIBuild.Models
+public class TestObjectSingleton
 {
-    public class TestObjectSingleton
+    private readonly ITestObject _testObject;
+    private string Guid { get; }
+
+    public TestObjectSingleton(ITestObject testObject)
     {
-        private readonly ITestObject _testObject;
-        private string Guid { get; }
+        _testObject = testObject;
+        Guid = System.Guid.NewGuid().ToString().Split('-')[0];
+    }
 
-        public TestObjectSingleton(ITestObject testObject)
-        {
-            _testObject = testObject;
-            Guid = System.Guid.NewGuid().ToString().Split('-')[0];
-        }
+    public void Print()
+    {
+        Console.WriteLine(this);
+        Console.WriteLine(_testObject);
+        Console.WriteLine("----------------");
+    }
 
-        public void Print()
-        {
-            Console.WriteLine(this);
-            Console.WriteLine(_testObject);
-            Console.WriteLine("----------------");
-        }
-
-        public override string ToString()
-        {
-            return $"{GetType().Name} {Guid}";
-        }
+    public override string ToString()
+    {
+        return $"{GetType().Name} {Guid}";
     }
 }
